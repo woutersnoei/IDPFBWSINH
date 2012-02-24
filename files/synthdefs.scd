@@ -277,7 +277,8 @@ SynthDef("nas-buf-v4", { |level=1, lpFreq=1200, speed = 0.7, out=0,gate=1|
 		outPB2 + noise);
 	outPB4 = outPB3 * 0.1 *
 		SinOsc.ar( [440,440] * LFNoise1.kr([0.1, 0.1]).range(0.25, 3) );
-	linen = Linen.kr( gate, 0.5, 1, 1, 2 )**2;
+	//linen = Linen.kr( gate, 0.5, 1, 1, 2 )**2;
+	linen = Linen.kr( gate, 2, 1, 3, 2 )**2;
 	output = outPB3 + outPB4 + (noise.rotate(1) * 0.1);
 	Out.ar(out, output * linen * 0.125 );
 	Out.ar(4, output * linen * 0.25 );
