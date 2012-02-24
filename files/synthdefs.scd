@@ -303,7 +303,7 @@ SynthDef("nas-stripe", { arg bufnum = 0, pan=0, level=1, fxLevel=0,
 SynthDef("nas-whisper", { arg bufnum = 25, pan=0, level=1,
 				rate=1, gate=0, filter=0, out=0;  //gate = loop
 	var output, fxLevel;
-	level = level * (-12.dbamp);
+	level = level * (-12.dbamp) * (filter.linlin( 0, 1, 0, 6 ).dbamp);
 	fxLevel = filter * 0.25;
 	output = PlayBufFree.ar(1, bufnum, rate * BufRateScale.kr( bufnum ), 
 			loop: gate) * 0.75; // level correction
