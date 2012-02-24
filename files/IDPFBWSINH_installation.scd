@@ -9,27 +9,23 @@
 
  with extra's installed:
  Quarks:   wslib
- 
- Standalone Version - can also be used in SuperCollider by extracting from Resources folder
 
- © W. Snoei 2005-2008
- 
- 
- /// MODIFIED FOR RECORDING /// !!
+ (c) W. Snoei 2005-2008
+
 ------------------------------------------------------------- */
 
-~nasPath = ~nasPath ?? { Document.current.path.dirname; };
+~nasPath = ~nasPath ?? { thisProcess.nowExecutingPath.dirname; };
 
 Server.default = s = Server.internal;
-//s.quit;
-//s.options.hardwareBufferSize = 256;
+if( s.options.device.notNil ) { 
+	s.options.hardwareBufferSize = 128; 
+} {
+	s.options.hardwareBufferSize = 512; 
+};
 
 /*
 ~nasPath.openInFinder;
 */
-
-//s.options.device = "U24XL";
-// s.options.sampleRate = 48000; // for recording
 
 ~nasWaitWindow = Window( "starting up...", Rect( 0, 0, 400, 200 )
 	.origin_( Rect( 0, 0, 400, 200 ).centerIn( Window.screenBounds ) ) ).front;
@@ -39,14 +35,14 @@ Server.default = s = Server.internal;
 
 s.waitForBoot({	
 	~nasWaitWindow.close;
-	(~nasPath +/+ "buffers.rtf").load;
-	(~nasPath +/+ "synthdefs.rtf").load;
+	(~nasPath +/+ "buffers.scd").load;
+	(~nasPath +/+ "synthdefs.scd").load;
 	
 	(
-	(~nasPath +/+ "states_installation.rtf").load;
-	(~nasPath +/+ "window_installation.rtf").load;
-	(~nasPath +/+ "funcs_installation.rtf").load;
-	(~nasPath +/+ "inputs.rtf").load;
+	(~nasPath +/+ "states_installation.scd").load;
+	(~nasPath +/+ "window_installation.scd").load;
+	(~nasPath +/+ "funcs_installation.scd").load;
+	(~nasPath +/+ "inputs.scd").load;
 	
 	~nasCurrent = 0;
 	~nasAction.value;

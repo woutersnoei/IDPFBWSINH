@@ -12,24 +12,19 @@
  
  Standalone Version - can also be used in SuperCollider by extracting from Resources folder
 
- © W. Snoei 2005-2008
+ (c) W. Snoei 2005-2008
  
- 
- /// MODIFIED FOR RECORDING /// !!
 ------------------------------------------------------------- */
 
-~nasPath = ~nasPath ?? { Document.current.path.dirname; };
+~nasPath = ~nasPath ?? { thisProcess.nowExecutingPath.dirname; };
 
 Server.default = s = Server.internal;
-//s.quit;
+
 if( s.options.device.notNil ) { 
 	s.options.hardwareBufferSize = 128; 
 } {
 	s.options.hardwareBufferSize = 512; 
 };
-
-// s.options.device = "";
-// s.options.sampleRate = 48000; // for recording
 
 ~nasWaitWindow = Window( "starting up...", Rect( 0, 0, 400, 200 )
 	.origin_( Rect( 0, 0, 400, 200 ).centerIn( Window.screenBounds ) ) ).front;

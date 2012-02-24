@@ -10,14 +10,12 @@
  with extra's installed:
  Quarks:   wslib
 
- © W. Snoei 2005-2008
+ (c) W. Snoei 2005-2008
  
- ////// POETRY VERSION 
- 
- /// MODIFIED FOR RECORDING /// !!
+ ////// POETRY VERSION : SOME PARTS REMOVED
 ------------------------------------------------------------- */
 
-~nasPath = Document.current.path.dirname;
+~nasPath = ~nasPath ?? { thisProcess.nowExecutingPath.dirname; };
 
 Server.default = s = Server.local;
 s.quit;
@@ -26,14 +24,14 @@ s.options.hardwareBufferSize = 128;
 // s.options.device = "";
 // s.options.sampleRate = 48000; // for recording
 
-(~nasPath +/+ "buffers.rtf").load;
-(~nasPath +/+ "synthdefs.rtf").load;
+(~nasPath +/+ "buffers.scd").load;
+(~nasPath +/+ "synthdefs.scd").load;
 
 (
-(~nasPath +/+ "states_poetry.rtf").load;
-(~nasPath +/+ "window.rtf").load;
-(~nasPath +/+ "funcs_poetry.rtf").load;
-(~nasPath +/+ "inputs.rtf").load;
+(~nasPath +/+ "states_poetry.scd").load;
+(~nasPath +/+ "window.scd").load;
+(~nasPath +/+ "funcs_poetry.scd").load;
+(~nasPath +/+ "inputs.scd").load;
 
 ~nasCurrent = 0;
 ~nasAction.value;
