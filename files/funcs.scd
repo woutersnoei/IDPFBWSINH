@@ -54,7 +54,7 @@
 
 ~nasFuncs[ 'whisper' ][ \extraArgs ] = [ [ \slider, "filter" ] ];
 
-~nasFuncs[ 'solo' ][ \extraArgs ] = [ [ \slider, "time" ], [ \transport, \time, 120 ] ];
+~nasFuncs[ 'solo' ][ \extraArgs ] = [ [ \slider, "time" ], [ \transport, \time, 126 ] ];
 
 // alternative playFuncs
 
@@ -139,9 +139,10 @@
 			};
 		
 ~nasFuncs[ 'solo' ][ \timeEnvs ] = ( 
-	whisperFilter: Env( [0, 0, 1, 1, 0, 0], [0.3,0.1,0.45,0.1,0.05] ),
-	fbDSlider: Env( [0.0, 0.0, 0.8, 0.98, 0.7, 0.0],[0.2, 0.2, 0.4, 0.15, 0.05] ),
-	diDSlider: Env( [0.0,0.0,1.0, 0.05,0.001,0.0001,0.0], [0.1,0.01,0.3,0.1,0.1,0.2] )
+	whisperFilter: Env( [0, 0, 1, 1, 0, 0], [ 36, 12, 54, 12, 12 ].normalizeSum ),
+	fbDSlider: Env( [0.0, 0.0, 0.8, 0.98, 0.7, 0.0, 0.0], [ 24, 24, 48, 18, 6, 6 ].normalizeSum ),
+	diDSlider: Env( [0.0,0.0,1.0, 0.05,0.001,0.0001,0.0], 
+		[ 14, 1.5, 42, 14, 14, 40.5 ].normalizeSum )
 	);
 	
 ~nasFuncs[ 'solo' ][ \setExtra ] = { |evt|
