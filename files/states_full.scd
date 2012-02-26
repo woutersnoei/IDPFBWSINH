@@ -307,7 +307,7 @@ BY WALKiNG SLOWLY iN
 NARROW HALLWAYS.
 I SPiLT THE BEANS.
 I MISUSED GOVERNMENT PROPERTY."],
-	d: [\button,1,\feedbackSlider,0.98,\dispSlider,0.7],
+	d: [\button,1,\feedbackSlider,0.92,\dispSlider,0.7],
 	rec: true,
 	play: true
 	),
@@ -344,7 +344,7 @@ I SPiLT THE BEANS.
 I MISUSED GOVERNMENT PROPERTY."],
 	text2: [ "I", "ASKED", "FOR", "IT" ],
 	color2: Color(1.0, 1.0, 1.0, 0.25),
-	d: [\button,1,\feedbackSlider,0.98,\dispSlider,0.95],
+	d: [\button,1,\feedbackSlider,0.92,\dispSlider,0.95],
 	play: true
 	),
 	
@@ -381,12 +381,12 @@ I MISUSED GOVERNMENT PROPERTY."],
 	input: false,
 	text2: [ "I", "ASKED", "FOR", "IT" ],
 	color2: Color(1.0, 1.0, 1.0, 0.25),
-	d: [\button,1,\feedbackSlider,0.95,\dispSlider,0.95] ),
+	d: [\button,1,\feedbackSlider,0.96,\dispSlider,0.95] ),
 
  (	comment: "all players are done cleaning",
  	text2: [ "I", "ASKED", "FOR", "IT" ],
 	color2: Color(1.0, 1.0, 1.0, 0.2),
-	d: [\button,1,\feedbackSlider,0.95,\dispSlider,0.95],
+	d: [\button,1,\feedbackSlider,0.96,\dispSlider,0.95],
 	playSlow: true,
 	whisper: true ),
 
@@ -394,7 +394,7 @@ I MISUSED GOVERNMENT PROPERTY."],
  	text2: [ "I", "ASKED", "FOR", "IT" ],
 	color2: Color(1.0, 1.0, 1.0, 0.5),
 	input: false,
-	d: [\button,1,\feedbackSlider,0.9,\dispSlider,0] ),
+	d: [\button,1,\feedbackSlider,0.97,\dispSlider,0] ),
 	
  (	comment: "--",
  	text2: [ "I", "ASKED", "FOR", "IT" ],
