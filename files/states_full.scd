@@ -390,6 +390,12 @@ I MISUSED GOVERNMENT PROPERTY."],
 	playSlow: true,
 	whisper: true ),
 
+ (	comment: "when text is visible",
+ 	text2: [ "I", "ASKED", "FOR", "IT" ],
+	color2: Color(1.0, 1.0, 1.0, 0.5),
+	input: false,
+	d: [\button,1,\feedbackSlider,1,\dispSlider,0.95] ),
+
  (	comment: "the end",
  	text2: [ "I", "ASKED", "FOR", "IT" ],
 	color2: Color(1.0, 1.0, 1.0, 0.5),
