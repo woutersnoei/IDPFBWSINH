@@ -219,40 +219,10 @@
 	
 	// ADDED/CHANGED FOR VIDEO VERSION
 	
- (	comment: "player #3 starts cleaning",
+ (	comment: "all players start cleaning",
  	text1: [ " I ", "CALLED", "ART", "IN     BLE" ],
- 	text2: [ "", "", "", "  valua   " ],
-	color2: Color(0.8, 0.0, 0.0, 0.9),
- 	var2: true ),
-
- (	comment: "player #3 stops cleaning",
- 	text1: [ " I ", "CALLED", "", "IN     BLE" ],
- 	text2: [ "", "", "", "  valua   " ],
-	color2: Color(0.8, 0.0, 0.0, 0.9),
- 	play: true ),
-
- (	comment: "player #3 stops writing",
- 	text1: [ " I ", "CALLED", "LOVE", "IN     BLE" ],
 	text2: [ "", "", "", "  valua   " ],
 	color2: Color(0.8, 0.0, 0.0, 0.9),
-	d: [\button,1,\feedbackSlider,0.3,\dispSlider,0.4] ),
-	
- (	comment: "player #4 starts cleaning",
- 	text1: [ " I ", "CALLED", "LOVE", "IN     BLE" ],
- 	text2: [ "", "", "", "  valua   " ],
-	color2: Color(0.8, 0.0, 0.0, 0.9),
- 	var4: true ),
- 	
- (	comment: "player #4 stops cleaning",
- 	text1: [ " I ", "CALLED", "LOVE", "" ],
- 	play: true ),
-
- (	comment: "player #4 stops writing",
- 	text1: [ " I ", "CALLED", "LOVE", "BLIND" ],
-	d: [\button,1,\feedbackSlider,0.3,\dispSlider,0.4] ),
-	
- (	comment: "all players start cleaning",
- 	text1: [ " I ", "CALLED", "LOVE", "BLIND" ],
 	var1: true ),
 
 	// END ADDED/CHANGED FOR VIDEO VERSION
