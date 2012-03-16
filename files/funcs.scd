@@ -3,6 +3,8 @@
 (
 ~nasFuncs = ();
 
+~nasOutput = ~nasOutput ? 0;
+
 // function names
 [ 
 ['a', "rt-effect A      ", "nas-rtfx-a"],  // 0
@@ -67,14 +69,16 @@
 	s.sendBundle(nil, evt[ \synth ].newMsg( s, \addToTail ),
 		*synths.collect({ |item, i| 
 			item.newMsg( evt[ \synth ], 
-				[ \in, i+4,
+				[ \out, ~nasOutput,
+				  \in, i+4,
 				  \pan, [-1,-0.875,0.875, 1][i],
 				  \doneAction, 14 ] ++ args ) }) );
 	};
 	
 ~nasFuncs[ 'cl' ][ \playFunc ] = { |evt ...args|  // 2 synths if 4 inputs
 	evt[\synth].do( _.release ); 
-	evt[\synth] = { |i| Synth( "nas-rtfx-c." ++ (2-i), args, s, \addToTail ) }
+	evt[\synth] = { |i| Synth( "nas-rtfx-c." ++ (2-i), 
+			[ \out, ~nasOutput ] ++args, s, \addToTail ) }
 			! ((~nasInputs[\mode] ? 2) /2);
 	};
 	
@@ -91,7 +95,8 @@
 	
 ~nasFuncs[ 'cr' ][ \playFunc ] = { |evt ...args|
 	evt[\synth].do( _.release ); 
-	evt[\synth] = { |i| Synth( "nas-rtfx-c." ++ (i+3), args, s, \addToTail ) }
+	evt[\synth] = { |i| Synth( "nas-rtfx-c." ++ (i+3), 
+			[ \out, ~nasOutput ] ++ args, s, \addToTail ) }
 			! ((~nasInputs[\mode] ? 2) /2);
 	};
 	
@@ -116,6 +121,7 @@
 	Task { 
 		loop { 
 			Synth( "nas-whisper", [
+				'out', ~nasOutput,
 				'bufnum', ~nasFuncs[ 'whisper' ][ \player ][ \space ].choose + 25, 
 				'pan', 1.0.rand2, 
 				'level', ~nasFuncs[ 'whisper' ][ \level ].rand * 0.5,
@@ -135,7 +141,7 @@
 		};
 		
 ~nasFuncs[ 'solo' ][\playFunc] = { |evt ...args| evt[\synth].release; 
-			evt[\synth] = Synth( evt[\defName], args, s, \addToHead );
+			evt[\synth] = Synth( evt[\defName], [ \out, ~nasOutput ] ++ args, s, \addToHead );
 			};
 		
 ~nasFuncs[ 'solo' ][ \timeEnvs ] = ( 
@@ -178,7 +184,7 @@
 };
 		
 ~nasFuncs[ 'str' ][\playFunc] = { |evt ...args| evt[\synth].release; 
-			evt[\synth] = Synth( evt[\defName], args, s, \addToHead );
+			evt[\synth] = Synth( evt[\defName], [ \out, ~nasOutput ] ++ args, s, \addToHead );
 			};
 
 );
