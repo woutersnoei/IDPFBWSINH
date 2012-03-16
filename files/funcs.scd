@@ -30,7 +30,7 @@
 		id:i,
 		level: 1,
 		playFunc: { |evt ...args| evt[\synth].release; 
-			evt[\synth] = Synth( evt[\defName], args, s, \addToTail );
+			evt[\synth] = Synth( evt[\defName], [ \out, ~nasOutput ] ++ args, s, \addToTail );
 			},
 		stopFunc: { |evt| evt[\synth].release; evt[\synth]=nil; },
 		setLevel: { |evt, level| 
