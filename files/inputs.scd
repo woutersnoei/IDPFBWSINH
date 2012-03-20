@@ -11,19 +11,20 @@
 
 ~nasInputs[\mode] = 4;
 
-~nasInputs[\args] = (in:1, bus:4, hiShelf:2, lowCut:200, tresh:-75, level:1);
+~nasInput = ~nasInput ? 0; // input offset
 
-~nasInputs[\args][\in] = 1;     /////// INPUT OFFSET (todo: in GUI)
+~nasInputs[\args] = (bus:4, hiShelf:2, lowCut:200, tresh:-75, level:1);
 
 ~nasInputs[\startFunc] = { |evt|
 	evt[\synth].release; evt[\synth] = Synth( "nas-inputs-" ++ ~nasInputs[\mode],
-		~nasInputs[\args].asArgsArray, s, \addToHead );
+		~nasInputs[\args].asArgsArray ++ [ \in, ~nasInput ], s, \addToHead );
 	};
 
 ~nasInputs[\stopFunc] = { |evt| evt[\synth].release; evt[\synth] = nil; };
 
-~nasInputs[\setArgs] = { |evt| evt[\synth].set( *~nasInputs[\args].asArgsArray ); };
-
+~nasInputs[\setArgs] = { |evt| evt[\synth].set( 
+	*( ~nasInputs[\args].asArgsArray ++  [ \in, ~nasInput ] )); 
+};
 
 GUI.staticText.new(  ~nasInputs[\container], 120@16 ).string_( "Inputs" )
 	.font_( Font( "Monaco", 9 ) );
@@ -52,7 +53,26 @@ GUI.staticText.new(  ~nasInputs[\container], 120@16 ).string_( "Inputs" )
 
 ~nasInputs[\argsViews] = ();
 
+~nasInputs[\argsViews][ \input ] = NumberBox( ~nasInputs[\container], 60@20 )
+	.font_( Font( "Monaco", 9 ) )
+	.value_( ~nasInput ).clipLo_(0).clipHi_(17).step_(1)
+	.action_({ |nb| ~nasInput = nb.value; ~nasInputs.setArgs; });
+GUI.staticText.new(  ~nasInputs[\container], 140@20 )
+	.font_( Font( "Monaco", 9 ) )
+	.string_( "input channel offset" );
+~nasInputs[\container].decorator.nextLine;
+
+~nasInputs[\argsViews][ \output ] = NumberBox( ~nasInputs[\container], 60@20 )
+	.font_( Font( "Monaco", 9 ) )
+	.value_( ~nasOutput ).clipLo_(0).clipHi_(17).step_(1)
+	.action_({ |nb| ~nasOutput = nb.value; });
+GUI.staticText.new(  ~nasInputs[\container], 140@20 )
+	.font_( Font( "Monaco", 9 ) )
+	.string_( "output channel offset" );
+~nasInputs[\container].decorator.nextLine;
+
 ~nasInputsMakeArgsView = { |label, value, argName, min, max,step=1|
+	~nasInputs[\argsViews][ argName ] = 
 	NumberBox( ~nasInputs[\container], 60@20 ).font_( Font( "Monaco", 9 ) )
 		.value_( value ).clipLo_(min).clipHi_(max).step_(step)
 		.action_({ |nb| ~nasInputs[\args][ argName ] = nb.value;
@@ -62,7 +82,7 @@ GUI.staticText.new(  ~nasInputs[\container], 120@16 ).string_( "Inputs" )
 		.string_( label );
 	~nasInputs[\container].decorator.nextLine;
 		};
-
+		
 [ 
 [ "dB gate treshold", ~nasInputs[\args][ \tresh ], \tresh, -120,0],
 [ "dB high shelf 1200Hz", ~nasInputs[\args][ \hiShelf ], \hiShelf, -12,12],

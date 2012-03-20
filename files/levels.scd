@@ -17,7 +17,18 @@
 			var levels = file.readAllString.interpret;
 			if( levels.respondsTo( \keysValuesDo ) ) {
 				levels.keysValuesDo({ |key, value|
-					~nasFuncs[ key ].levelSlider.valueAction = ~nasDBWarp.unmap(value);
+					if( [\input, \output].includes( key ) ) {
+						if( ~nasInputs.isNil or: { ~nasInputs[ \argsViews ][ key ].isClosed }) {
+							switch( key, 
+								\input, { ~nasInput = value },
+								\output, { ~nasOutput = value }
+							)
+						} {
+							~nasInputs[ \argsViews ][ key ].valueAction = value;
+						};
+					} {
+						~nasFuncs[ key ].levelSlider.valueAction = ~nasDBWarp.unmap(value);
+					};
 				});
 			} { 
 				ifnot.value 
@@ -30,7 +41,10 @@
 
 ~nasLevels.write = { |evt|
 	File.use( evt.path, "w", { |f| 
-		f.write( ~nasFuncs.collect({ |item| item.level.ampdb; }).asString
+		f.write( 
+			( ~nasFuncs.collect({ |item| item.level.ampdb; }) ++ 
+				( input: ~nasInput, output: ~nasOutput )
+			).asString
 			.replace( "\n", "" ) // clear newlines
 			.replace( "   ", " ") // cleanup spaces
 			.replace( ", ", ",\n  " ) // add newline per item

@@ -9,8 +9,10 @@ s.waitForBoot({
 (
 SynthDef("nas-inputs-4", { // 4 inputs
 	arg in=3, bus=4, hiShelf=2, lowCut=200, tresh = -75, level=1.0, gate=1;
+	arg in=2, bus=4, hiShelf=2, lowCut=200, tresh = -75, level=1.0, gate=1;
 	var input, inputEQ, amplitude, output;
 	input = AudioIn.ar(in + [0,1,2,3]) * Env.cutoff(0.05).kr(2,gate);
+	input = SoundIn.ar(in + [0,1,2,3]) * Env.cutoff(0.05).kr(2,gate);
 	inputEQ = BHiShelf.ar( HPF.ar(input, lowCut), db: hiShelf);
 	output = Compander.ar(inputEQ, inputEQ, tresh.dbamp, 10, 1, 0.01, 0.01) * level;
 	Out.ar(bus, output );
@@ -18,8 +20,10 @@ SynthDef("nas-inputs-4", { // 4 inputs
 	
 SynthDef("nas-inputs-2", { // 2 inputs
 	arg in=3, bus=4, hiShelf=2, lowCut=200, tresh = -75, level=1.0, gate=1, t_resetPeak = 0;
+	arg in=2, bus=4, hiShelf=2, lowCut=200, tresh = -75, level=1.0, gate=1, t_resetPeak = 0;
 	var input, inputEQ, amplitude, output, amp,peak;
 	input = AudioIn.ar(in + [0,1]) * Env.cutoff(0.05).kr(2,gate);	inputEQ = BHiShelf.ar( HPF.ar(input, lowCut), db: hiShelf);
+	input = SoundIn.ar(in + [0,1]) * Env.cutoff(0.05).kr(2,gate);	inputEQ = BHiShelf.ar( HPF.ar(input, lowCut), db: hiShelf);
 	output = Compander.ar(inputEQ, inputEQ, tresh.dbamp, 10, 1, 0.01, 0.01) * level;
 	amp = Amplitude.kr( inputEQ );
 	peak = Peak.kr( amp, t_resetPeak );
