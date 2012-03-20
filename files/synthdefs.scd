@@ -8,29 +8,20 @@ s.waitForBoot({
 ///// INPUT ROUTER
 (
 SynthDef("nas-inputs-4", { // 4 inputs
-	arg in=3, bus=4, hiShelf=2, lowCut=200, tresh = -75, level=1.0, gate=1;
 	arg in=2, bus=4, hiShelf=2, lowCut=200, tresh = -75, level=1.0, gate=1;
 	var input, inputEQ, amplitude, output;
-	input = AudioIn.ar(in + [0,1,2,3]) * Env.cutoff(0.05).kr(2,gate);
 	input = SoundIn.ar(in + [0,1,2,3]) * Env.cutoff(0.05).kr(2,gate);
 	inputEQ = BHiShelf.ar( HPF.ar(input, lowCut), db: hiShelf);
 	output = Compander.ar(inputEQ, inputEQ, tresh.dbamp, 10, 1, 0.01, 0.01) * level;
-	Out.ar(bus, output );
+	PrivateOut.ar(bus, output );
 	}).load(s);
 	
 SynthDef("nas-inputs-2", { // 2 inputs
-	arg in=3, bus=4, hiShelf=2, lowCut=200, tresh = -75, level=1.0, gate=1, t_resetPeak = 0;
 	arg in=2, bus=4, hiShelf=2, lowCut=200, tresh = -75, level=1.0, gate=1, t_resetPeak = 0;
 	var input, inputEQ, amplitude, output, amp,peak;
-	input = AudioIn.ar(in + [0,1]) * Env.cutoff(0.05).kr(2,gate);	inputEQ = BHiShelf.ar( HPF.ar(input, lowCut), db: hiShelf);
 	input = SoundIn.ar(in + [0,1]) * Env.cutoff(0.05).kr(2,gate);	inputEQ = BHiShelf.ar( HPF.ar(input, lowCut), db: hiShelf);
 	output = Compander.ar(inputEQ, inputEQ, tresh.dbamp, 10, 1, 0.01, 0.01) * level;
-	amp = Amplitude.kr( inputEQ );
-	peak = Peak.kr( amp, t_resetPeak );
-	SendTrig.kr( amp > tresh.dbamp, 10 + [0,1], 1 );
-	SendTrig.kr( amp < tresh.dbamp, 10 + [0,1], 0 );
-	SendTrig.kr( Slope.kr( peak ).abs - 0.0001, 20 + [0,1], peak.ampdb ); 
-	Out.ar(bus, output.stutter(2) );
+	PrivateOut.ar(bus, output.stutter(2) );
 	}).load(s);
 );
 
@@ -46,7 +37,7 @@ SynthDef("nas-rtfx-a", { // long tones :: 1 channel
 	noiseFunc = {
 	(LFCub.ar( Rand(i_minFr.dup(dupAmt), (i_varFr + i_minFr).dup(dupAmt)) ).sum / 10) 
 		* (LFCub.ar( Rand(i_minFr.dup(dupAmt), (i_varFr + i_minFr).dup(dupAmt)) ) / 10).sum; };
-	input = In.ar(in).excess(treshLevel.dbamp);
+	input = PrivateIn.ar(in).excess(treshLevel.dbamp);
 	Out.ar(out, Env([0,1,1,0],[0.5, 0, 1.0],'lin', 1).kr(doneAction, gate) * Pan2.ar(
 		Slew.ar(Amplitude.ar(input , attackTime, releaseTime), 0.01,40) * 
 			[noiseFunc.value, noiseFunc.value] * level * 2.0, 
@@ -59,7 +50,7 @@ SynthDef("nas-rtfx-b", { // water-effect :: 4 channels
 		pWidth = 0.125, fblevel = 2.5, out = 0, gate = 1;
 	var output, fbin, input, linen;
 	fbin = LocalIn.ar(8) * fblevel; // 8 channel buffers
-	input = In.ar(in, 4) * volume * 1.5;
+	input = PrivateIn.ar(in, 4) * volume * 1.5;
 	output = Resonz.ar(fbin.rotate(1) + input, 
 		LFNoise0.kr( {1.4 + 0.3.rand2}!8 ).range(200, 2000), 0.1 );
 	output = PitchShift.ar(output, Rand(0.2.dup(8),0.4.dup(8)), 1, 0.5, 1.0);
@@ -74,7 +65,7 @@ SynthDef("nas-rtfx-c", { |in = 4, pan = 0, level = 1,
 	// percussive :: 1 channel
 	var amp, trig, inKlank, outKlank, outSelect, linen;
 	amp = Amplitude.ar( 
-		BHiPass.ar(In.ar(in, 1), 1400 ), 0.01, 0.01).excess(tresh.dbamp);
+		BHiPass.ar(PrivateIn.ar(in, 1), 1400 ), 0.01, 0.01).excess(tresh.dbamp);
 	trig = Trig1.ar( amp - 0.001, 0.09 );
 	
 	inKlank = Decay.ar( PulseDivider.ar(trig, 9, (0,1..8)), 0.1) 
@@ -122,7 +113,7 @@ SynthDef("nas-rtfx-c-auto", { |pan = 0, level =1, dens=10, time = 0, out = 0, ga
 	linen = Linen.kr( gate, 2, 1, 3, 2 )**2;
 	//output = FreeVerb.ar( output );
 	Out.ar(out, output * linen * 10);
-	Out.ar(4, output * lIn * linen * 10 * fxLevel);
+	PrivateOut.ar(4, output * lIn * linen * 10 * fxLevel);
 	
 	}).load(s);
 );
@@ -135,7 +126,7 @@ SynthDef("nas-rtfx-d", { // fb-pitchshift
 	lIn = inLevel;
 	level = level * lIn;
 	fbin = LeakDC.ar(LocalIn.ar(8) * feedback * 1.78 * (lIn**3)) ;
-	input = In.ar(in, 4);
+	input = PrivateIn.ar(in, 4);
 	
 	output = input ring2: fbin.rotate(1);
 	output = PitchShift.ar(output, Rand(0.4.dup(8),0.8.dup(8)), shift1, 
@@ -153,7 +144,7 @@ SynthDef("nas-buf-rec", { | in1=4, in2=5, in3=6, in4=7, recLevel=1.0, preLevel=1
 	var env;
 	var out;
 	var in;
-	in = [in1,in2,in3,in4].collect({ |item| In.ar(item) });
+	in = [in1,in2,in3,in4].collect({ |item| PrivateIn.ar(item) });
 	env = Env([0,1,1,0], [1,1,0.1], \lin, 1).kr(2, gate); 
 	4.do({ |i|
 		RecordBuf.ar( in[i], 20+i, 0, recLevel * env, preLevel )
@@ -285,7 +276,7 @@ SynthDef("nas-buf-v4", { |level=1, lpFreq=1200, speed = 0.7, out=0,gate=1|
 	linen = Linen.kr( gate, 2, 1, 3, 2 )**2;
 	output = outPB3 + outPB4 + (noise.rotate(1) * 0.1);
 	Out.ar(out, output * linen * 0.125 );
-	Out.ar(4, output * linen * 0.25 );
+	PrivateOut.ar(4, output * linen * 0.25 );
 	}).load(s);
 );
 
@@ -298,7 +289,7 @@ SynthDef("nas-stripe", { arg bufnum = 0, pan=0, level=1, fxLevel=0,
 	env = Env([0,2,0.05,0],[0.1,8.5,1], [\lin, \exp, \lin]).kr(2);
 	linen = Linen.kr( gate, 0, 1, 0.1, 2 )**2;
 	Out.ar( out, Splay.ar(output) * env * level * 3 );
-	Out.ar( 4, output * env * level);
+	PrivateOut.ar( 4, output * env * level);
 	 }).load(s);
 );
 
@@ -318,7 +309,7 @@ SynthDef("nas-whisper", { arg bufnum = 25, pan=0, level=1,
 		[Rand(150,2000), Rand(150,2000)], 10**(1 - (filter*3))
 		).sum;
 	Out.ar(out, Pan2.ar(output * level, pan) * 2 ); 
-	Out.ar(Rand(4,7), output * fxLevel * level * 2);
+	PrivateOut.ar(Rand(4,7), output * fxLevel * level * 2);
 	}).load(s);
 );
 
