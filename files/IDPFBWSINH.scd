@@ -22,6 +22,8 @@ Server.default = s = Server.internal;
 
 if( s.options.device.notNil ) { 
 	s.options.hardwareBufferSize = 128; 
+	s.options.numInputBusChannels = 22;
+	s.options.numOutputBusChannels = 22;
 } {
 	s.options.hardwareBufferSize = 512; 
 };
